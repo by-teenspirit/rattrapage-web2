@@ -61,3 +61,48 @@ Correction :
 - Le backend est remplacé par un adaptateur ; les vrais codes d'erreur HTTP ou les délais réseau ne sont pas testés.
 - Si l'utilisateur change de groupe très vite, plusieurs requêtes partent quand même ; elles sont ignorées mais pas annulées
 - Le style et la mise en page ne sont pas testés.
+
+## F3 — Bibliothèques UI
+
+### Choix techniques
+**Tailwind CSS**
+
+Pour construire la hiérarchie visuelle directement à partir de la maquette, sans ajouter de composants lourds.
+Accessibilité non fournie : je l'ai gérée moi-même (labels, focus, dialog).
+
+**Material Symbols pour les icônes**
+Bibliothèque d'icônes cohérente, installée en local (npm). 
+Toutes les icônes sont décoratives (`aria-hidden`) : le sens est toujours porté par un texte visible ou un `aria-label`.
+
+**TypeScript**
+Les types (`Session`, `Status`, `Group`…) empêchent d'utiliser une valeur qui n'existe pas dans les données. `Record<Status, string>` oblige à prévoir un libellé pour chaque statut. Le build échoue si un type est faux.
+
+### Hiérarchie SessionBlock / SessionDetail
+
+SessionBlock : période et groupe en petites capitales, titre en gras, puis durée, domaine, formateur et statut. Le bloc entier est un bouton, ce qui donne une grande zone cliquable.
+
+SessionDetail : il reprend toutes les informations avec un intitulé pour chacune (date, période, groupe, mode, formateur), et ajoute une phrase d'explication quand la séance est seulement proposée.
+
+### Responsive
+
+| | 360 px | 1280 px |
+|---|---|---|
+| Statistiques | grille 2 × 2 | 4 sur une ligne |
+| Boutons d'en-tête | pleine largeur, côte à côte | à droite du titre |
+| Bouton Filtres | icône seule, nom accessible conservé | icône + texte |
+| Domaines | une ligne qui défile horizontalement | sur plusieurs lignes |
+| Jours | empilés | 5 colonnes (à partir de 1024 px) |
+
+Aucun défilement horizontal de la page à 360 px. Captures : `preuves/f3-360.png`, `preuves/f3-1280.png`.
+
+Seuil WCAG AA : 4,5:1 pour le texte normal, 3:1 pour les éléments graphiques (contour de focus).
+Protocole clavier conservé. 
+
+### Limites
+
+- « Affecter un bloc » est un bouton visuel
+- Les titres et volumes des semaines S01 à S03 sont des exemples
+- La vue Mois affiche les semaines du mois en liste
+- Le chevron du sélecteur de mois est décoratif
+- La police d'icônes pèse environ 4 Mo. Un sous-ensemble limité aux icônes utilisées serait plus léger.
+- Pas de tests automatisés sur ce module : vérification manuelle.
