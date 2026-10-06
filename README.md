@@ -54,3 +54,12 @@ Module documentaire : pas de code, pas de déploiement (hors périmètre du suje
 - Estimation en ligne : https://calculator.aws/#/estimate?id=c528c2fe0dc6e282e1291d0a672aa8cd1316ab7f
 
 Le schéma est écrit en Mermaid et s'affiche directement sur GitHub.
+
+## C2 — CI/CD
+
+- `.github/workflows/ci-cd.yml` : workflow GitHub Actions commenté.
+- `c2-cicd/NOTE.md` : audit, permissions, secrets, contributions non fiables, preuves, procédure de retour arrière.
+- Preuves : `preuves/c2-*.png` et logs dans `preuves/c2/`.
+- Versions publiées : onglet Releases du dépôt.
+
+Le workflow tourne sur chaque PR (validation) et sur `main` (validation, release, livraison simulée). Retour arrière : Actions → CI/CD front → Run workflow → saisir une version `front-vN`.
