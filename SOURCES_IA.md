@@ -55,3 +55,35 @@ Après avoir réfléchi à la structure, je lui ai expliqué à l'écrit précis
 - Tailwind CSS : https://tailwindcss.com/docs
 - Material Symbols : https://fonts.google.com/icons
 - Contraste WCAG : https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html
+
+## C1 — AWS
+
+### Fichiers concernés
+`c1-aws/DOSSIER.md` : structure, tableaux, schéma Mermaid et réécriture des textes ainsi que complétiton de certains quand ils étaient trop vagues. 
+
+L'estimation des coûts (`preuves/c1-estimation.pdf`) a été faite par moi dans AWS Pricing Calculator.
+
+### Requêtes représentatives
+- Je lui ai demandé de me réécrire certains paragraphes que j'ai fait ou de les compléter quand j'étais trop vague. 
+- Il a aussi fait la structure du document et le mermaid. 
+- Je lui ai demandé à quoi servait certains des outils et s'ils étaient pertinents de les rajouter dans l'estimation ou non. 
+
+### Ce que j'ai adapté
+- J'ai saisi moi-même tous les services dans le calculateur AWS.
+- J'ai repéré avec l'aide de l'IA un coût RDS anormal (66,17 $). J'ai trouvé dans le calculateur les trois options activées par défaut (RDS Proxy, Database Insights, Extended Support) et je les ai désactivées.
+- J'ai ajouté l'IPv4 publique qui manquait dans la première estimation.
+- J'ai nettoyé des valeurs par défaut inutiles dans CloudWatch (module RUM).
+- J'ai reformulé ou changé aussi certaines choses où il parlait trop ou n'était pas pertinent. 
+
+### Ce que j'ai vérifié moi-même
+- Tous les prix proviennent du calculateur AWS officiel, exporté le 06/10/2026 (lien et PDF fournis).
+- Les calculs de volumes (requêtes, trafic, logs) ont été refaits à la main.
+- Les pages de documentation AWS
+
+### Autres sources
+- AWS Pricing Calculator : https://calculator.aws/ (06/10/2026)
+- Tarifs EC2 : https://aws.amazon.com/ec2/pricing/on-demand/
+- Tarifs RDS PostgreSQL : https://aws.amazon.com/rds/postgresql/pricing/
+- Tarifs CloudWatch : https://aws.amazon.com/cloudwatch/pricing/
+- Tarifs VPC (IPv4 publique) : https://aws.amazon.com/vpc/pricing/
+- Sauvegardes RDS : https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithAutomatedBackups.html

@@ -44,3 +44,13 @@ Structure :
 - `src/ui.ts` : classes communes (boutons, champs, focus).
 - `src/components/` : en-tête, statistiques, barre de calendrier, filtres, semaine, jour, bloc de séance, badge de statut, détail.
 - `../preuves/f3-360.png` et `../preuves/f3-1280.png` : captures du rendu.
+
+## C1 — AWS
+
+Module documentaire : pas de code, pas de déploiement (hors périmètre du sujet).
+
+- `c1-aws/DOSSIER.md` : dossier d'architecture (comparaison de deux architectures, schéma, sécurité, coûts, protocoles, RPO/RTO, limites).
+- `preuves/c1-estimation.pdf` : export de l'estimation AWS Pricing Calculator du 06/10/2026.
+- Estimation en ligne : https://calculator.aws/#/estimate?id=c528c2fe0dc6e282e1291d0a672aa8cd1316ab7f
+
+Le schéma est écrit en Mermaid et s'affiche directement sur GitHub.
