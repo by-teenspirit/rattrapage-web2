@@ -145,3 +145,15 @@ Trafic et logs calculés à partir d'une moyenne (≈ 2 req/s sur 10 h × 22 jou
 
 ### Limites
 Voir la section 8 du dossier : instance unique, base Single-AZ, pas de reprise inter-région, volumes estimés, prix datés, durée de restauration non testée, aucun déploiement réel.
+
+## C2 — CI/CD
+
+Le détail est dans `c2-cicd/NOTE.md`.
+
+- **GitHub Actions** : déjà intégré au dépôt, gratuit pour un dépôt public, et les traces sont réelles.
+- **Projet F2 comme front** : il a déjà `npm ci`, des tests et un build, ce qui évite un projet fictif.
+- **Releases GitHub comme stockage des artefacts** : conservées sans limite de durée (contrairement aux artefacts de workflow, supprimés après 30 jours ici), téléchargeables pour un retour arrière.
+- **Empreinte SHA-256** : garantit que l'archive livrée est celle qui a été construite.
+- **Environnement protégé + règle de branche** : une livraison demande une PR validée puis une approbation.
+- **Livraison simulée** : le sujet exclut un déploiement réel ; l'étape affiche la version et les fichiers livrés.
+- Limites : voir §9 de la note.
