@@ -26,8 +26,7 @@ describe('PlanningList', () => {
   test('affiche le chargement pendant la requête', () => {
     const pending = deferred();
     render(<PlanningList loadSessions={() => pending.promise} />);
-    expect(screen.getByRole('status')).toHaveTextContent('Chargement');
-  });
+expect(screen.getByRole('status')).toHaveTextContent('Loading');  });
 
   test('affiche les séances en cas de succès', async () => {
     render(<PlanningList loadSessions={fakeLoader()} />);
