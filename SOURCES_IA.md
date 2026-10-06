@@ -88,6 +88,30 @@ L'estimation des coûts (`preuves/c1-estimation.pdf`) a été faite par moi dans
 - Tarifs VPC (IPv4 publique) : https://aws.amazon.com/vpc/pricing/
 - Sauvegardes RDS : https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithAutomatedBackups.html
 
+## C2 — CI/CD
+
+### Fichiers concernés
+`.github/workflows/ci-cd.yml` et `c2-cicd/NOTE.md` : structure proposée par l'IA. 
+
+### Requêtes représentatives
+- Je lui ai demandé de l'aide sur certaines erreurs quand les checks ne passaient pas 
+- Ou quand je ne savais plus où chercher pour faire certaines modifications afin de ne pas perdre de temps. 
+
+### Ce que j'ai adapté
+- Réglages GitHub faits par moi : permissions en lecture seule, environnement `production` avec approbation, règle de branche sur `main`.
+- J'ai corrigé une règle de branche qui ne ciblait aucune branche.
+
+### Ce que j'ai vérifié moi-même
+- Exécutions réelles sur GitHub : validation sur PR, livraison après fusion, PR bloquée par un test cassé, retour arrière vers une version précédente.
+- Vérification de l'empreinte SHA-256 dans les logs du retour arrière.
+
+### Autres sources
+- Documentation GitHub Actions : https://docs.github.com/actions
+- Permissions du GITHUB_TOKEN : https://docs.github.com/actions/security-for-github-actions/security-guides/automatic-token-authentication
+- Environnements de déploiement : https://docs.github.com/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment
+- Règles de branche (rulesets) : https://docs.github.com/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets
+
+
 ## I3 — Structuration de flux
 
 ### Fichiers concernés
