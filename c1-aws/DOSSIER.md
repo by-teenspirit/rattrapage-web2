@@ -110,7 +110,6 @@ Légende : trait plein = requête ou flux de données ; pointillé = identité o
 - Alarmes envoyées par e-mail (SNS) :
   - l'API ne répond plus (health check) ;
   - taux d'erreurs 5xx élevé ;
-  - CPU de l'instance > [seuil] % ;
   - espace disque RDS faible ;
   - budget mensuel dépassé (AWS Budgets).
 
@@ -269,10 +268,10 @@ Une panne de la zone de disponibilité rend la base indisponible jusqu'à la res
 - **Rien n'a été déployé.**
 
 ## Sources
-- AWS Pricing Calculator : https://calculator.aws/ (consulté le [date])
-- Tarifs EC2 : https://aws.amazon.com/ec2/pricing/on-demand/ (consulté le [date])
-- Tarifs RDS PostgreSQL : https://aws.amazon.com/rds/postgresql/pricing/ (consulté le [date])
-- Tarifs S3 : https://aws.amazon.com/s3/pricing/ (consulté le [date])
-- Tarifs CloudFront : https://aws.amazon.com/cloudfront/pricing/ (consulté le [date])
-- Tarifs CloudWatch : https://aws.amazon.com/cloudwatch/pricing/ (consulté le [date])
+- AWS Pricing Calculator : https://calculator.aws/ 
+- Tarifs EC2 : https://aws.amazon.com/ec2/pricing/on-demand/ 
+- Tarifs RDS PostgreSQL : https://aws.amazon.com/rds/postgresql/pricing/ 
+- Tarifs S3 : https://aws.amazon.com/s3/pricing/ 
+- Tarifs CloudFront : https://aws.amazon.com/cloudfront/pricing/ 
+- Tarifs CloudWatch : https://aws.amazon.com/cloudwatch/pricing/ 
 - Sauvegardes RDS : https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithAutomatedBackups.html
