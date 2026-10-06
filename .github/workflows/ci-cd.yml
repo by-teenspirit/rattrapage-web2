@@ -1,0 +1,147 @@
+name: CI/CD front
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version à redéployer (ex. front-v12)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    if: github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: f2-tests-front
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: f2-tests-front/package-lock.json
+
+      - name: Installation verrouillée
+        run: npm ci
+
+      - name: Tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Vérification du build
+        run: test -f dist/index.html
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: front-${{ github.sha }}
+          path: f2-tests-front/dist
+          if-no-files-found: error
+          retention-days: 30
+
+  release:
+    needs: validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.archive.outputs.version }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: front-${{ github.sha }}
+          path: dist
+
+      - name: Archive versionnée et empreinte
+        id: archive
+        run: |
+          VERSION="front-v${GITHUB_RUN_NUMBER}"
+          tar -czf "$VERSION.tar.gz" -C dist .
+          sha256sum "$VERSION.tar.gz" > "$VERSION.tar.gz.sha256"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Publication de la release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.archive.outputs.version }}
+        run: |
+          gh release create "$VERSION" "$VERSION.tar.gz" "$VERSION.tar.gz.sha256" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "$VERSION" \
+            --notes "Build du commit $GITHUB_SHA"
+
+  deploy:
+    needs: release
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: production
+      cancel-in-progress: false
+    env:
+      VERSION: ${{ needs.release.outputs.version }}
+    steps:
+      - name: Téléchargement de l'artefact versionné
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download "$VERSION" --repo "$GITHUB_REPOSITORY" --pattern "$VERSION.tar.gz*"
+
+      - name: Contrôle avant livraison
+        run: |
+          sha256sum -c "$VERSION.tar.gz.sha256"
+          mkdir site
+          tar -xzf "$VERSION.tar.gz" -C site
+          test -f site/index.html
+
+      - name: Livraison (simulée)
+        run: |
+          echo "Livraison de $VERSION en production"
+          find site -type f | sort
+
+  rollback:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: production
+      cancel-in-progress: false
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+      - name: Contrôle du nom de version
+        run: |
+          if [[ ! "$VERSION" =~ ^front-v[0-9]+$ ]]; then
+            echo "Version invalide : $VERSION"
+            exit 1
+          fi
+
+      - name: Téléchargement de la version précédente
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download "$VERSION" --repo "$GITHUB_REPOSITORY" --pattern "$VERSION.tar.gz*"
+
+      - name: Contrôle avant livraison
+        run: |
+          sha256sum -c "$VERSION.tar.gz.sha256"
+          mkdir site
+          tar -xzf "$VERSION.tar.gz" -C site
+          test -f site/index.html
+
+      - name: Retour arrière (simulé)
+        run: |
+          echo "Retour arrière vers $VERSION en production"
+          find site -type f | sort
