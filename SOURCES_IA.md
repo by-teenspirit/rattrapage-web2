@@ -87,3 +87,27 @@ L'estimation des coûts (`preuves/c1-estimation.pdf`) a été faite par moi dans
 - Tarifs CloudWatch : https://aws.amazon.com/cloudwatch/pricing/
 - Tarifs VPC (IPv4 publique) : https://aws.amazon.com/vpc/pricing/
 - Sauvegardes RDS : https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithAutomatedBackups.html
+
+## I3 — Structuration de flux
+
+### Fichiers concernés
+`i3-flux/pipeline.py` et `i3-flux/tests/test_pipeline.py` : travaillés avec l'IA. 
+
+`i3-flux/seances.ndjson` : recopié depuis les tableaux du sujet.
+
+### Requêtes représentatives
+- Je lui ai demandé de m'aider à écrire les tests pour aller plus vite. 
+
+### Ce que j'ai adapté
+- J'ai corrigé l'emplacement des fichiers de test, créés par erreur dans un sous-dossier `i3-flux/i3-flux/`.
+- J'ai fait un tour de ce qu'il avait fait et je suis repassée dessus quand ça ne m'allait pas. 
+
+### Ce que j'ai vérifié moi-même
+- Comparaison du jeu de données avec les tableaux du sujet, ligne par ligne.
+- Exécution du pipeline : 12 lus, 6 acceptés, 4 rejets, 2 doublons ; lecture des motifs de rejet.
+- Exécution des 7 tests (`preuves/i3-tests.txt`).
+
+### Autres sources
+- Documentation Python, module json : https://docs.python.org/3/library/json.html
+- Documentation Python, module datetime : https://docs.python.org/3/library/datetime.html
+- Format NDJSON : https://github.com/ndjson/ndjson-spec

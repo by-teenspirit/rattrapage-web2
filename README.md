@@ -54,3 +54,19 @@ Module documentaire : pas de code, pas de déploiement (hors périmètre du suje
 - Estimation en ligne : https://calculator.aws/#/estimate?id=c528c2fe0dc6e282e1291d0a672aa8cd1316ab7f
 
 Le schéma est écrit en Mermaid et s'affiche directement sur GitHub.
+
+## I3 — Structuration de flux
+
+Prérequis : Python 3.10 ou plus. Aucune dépendance à installer.
+
+    cd i3-flux
+    python3 pipeline.py seances.ndjson sortie
+    python3 -m unittest discover -s tests -t . -v
+
+- `pipeline.py` : pipeline en ligne de commande (lecture → validation → normalisation → déduplication → sortie).
+- `seances.ndjson` : jeu de données du sujet (12 lignes, dont une malformée).
+- `tests/test_pipeline.py` : 7 tests (valide, invalide, doublon, JSON malformé, fichier vide, invariant, reproductibilité).
+- Sorties produites dans le dossier passé en argument : `acceptes.ndjson`, `rejets.ndjson`, `stats.json`.
+- Preuves : `preuves/i3/` (sorties sur le jeu fourni) et `preuves/i3-tests.txt` (trace des tests).
+
+Résultat attendu sur le jeu fourni : 12 lus = 6 acceptés + 4 rejets + 2 doublons.
