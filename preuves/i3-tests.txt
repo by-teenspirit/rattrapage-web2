@@ -1,0 +1,12 @@
+test_doublon_garde_la_premiere_valide (tests.test_pipeline.TestPipeline.test_doublon_garde_la_premiere_valide) ... ok
+test_fichier_vide (tests.test_pipeline.TestPipeline.test_fichier_vide) ... ok
+test_jeu_fourni_et_invariant (tests.test_pipeline.TestPipeline.test_jeu_fourni_et_invariant) ... ok
+test_json_malforme_ne_bloque_pas_la_suite (tests.test_pipeline.TestPipeline.test_json_malforme_ne_bloque_pas_la_suite) ... ok
+test_ligne_valide (tests.test_pipeline.TestPipeline.test_ligne_valide) ... ok
+test_lignes_invalides (tests.test_pipeline.TestPipeline.test_lignes_invalides) ... ok
+test_meme_fichier_meme_resultat (tests.test_pipeline.TestPipeline.test_meme_fichier_meme_resultat) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.026s
+
+OK
