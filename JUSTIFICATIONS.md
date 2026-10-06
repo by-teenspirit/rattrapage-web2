@@ -157,3 +157,46 @@ Le détail est dans `c2-cicd/NOTE.md`.
 - **Environnement protégé + règle de branche** : une livraison demande une PR validée puis une approbation.
 - **Livraison simulée** : le sujet exclut un déploiement réel ; l'étape affiche la version et les fichiers livrés.
 - Limites : voir §9 de la note.
+
+
+## I3 — Structuration de flux
+
+### Choix techniques
+- **Python standard uniquement** (`json`, `re`, `datetime`, `argparse`, `unittest`) : rien à installer, le correcteur lance directement.
+- **Tables de correspondance** (`PERIODES`, `STATUTS`…) : une seule structure sert à valider et à normaliser. Ajouter une variante (ex. « Matin ») = ajouter une ligne.
+- **Exception `Rejet`** : chaque contrôle lève un motif lisible ; la boucle l'attrape et passe à la ligne suivante. Une erreur ne bloque jamais la suite.
+- **Validation avant déduplication** : l'ensemble des id déjà vus ne contient que des id valides. Une ligne invalide ne peut pas « bloquer » un id pour une ligne valide qui arrive après.
+
+### Résultat sur le jeu fourni
+| Ligne | Résultat | Motif |
+|---|---|---|
+| 1, 2, 3, 5, 6, 11 | acceptée | dates et valeurs normalisées |
+| 4 | doublon | s01 déjà accepté ligne 1 |
+| 7 | rejet | titre vide |
+| 8 | rejet | 30 février inexistant |
+| 9 | rejet | période « soir » inconnue |
+| 10 | doublon | s02 déjà accepté ligne 2 |
+| 12 | rejet | JSON malformé |
+
+### Reproductibilité
+- Les dates restent des dates sans heure (`datetime.date`) : aucun fuseau horaire n'intervient.
+- Fichiers écrits en UTF-8 avec des fins de ligne `\n` imposées : même résultat octet par octet sur Windows, macOS et Linux.
+- Aucun hasard ni horodatage dans les sorties.
+- Vérifié par le test `test_meme_fichier_meme_resultat`, qui compare deux exécutions octet par octet.
+
+### Usage mémoire
+Le fichier est lu **ligne par ligne** : la boucle `for` sur le fichier ne charge qu'une ligne à la fois, et `traiter` est un générateur (`yield`) qui renvoie chaque résultat dès qu'il est prêt. Les lignes acceptées et rejetées sont écrites immédiatement dans les fichiers de sortie, sans être gardées en mémoire.
+
+La seule structure qui grandit est l'ensemble `vus`, qui contient les id déjà acceptés : sa taille dépend du nombre de séances **distinctes**, pas de la taille du fichier. Pour 10 000 séances, cela reste quelques centaines de Ko.
+
+Si le volume devenait énorme, on pourrait remplacer `vus` par un index sur disque (base SQLite par exemple).
+
+### Choix à signaler
+- Une ligne **complètement vide** est ignorée et n'est pas comptée dans « lus ». On pourrait cependant la compter comme rejetée. 
+- Le domaine n'est vérifié que comme texte non vide : le sujet ne donne pas de liste fermée.
+
+### Limites
+- Pas de contrôle que la date tombe dans l'année de formation.
+- Les doublons sont détectés par id uniquement : deux séances identiques avec des id différents passent.
+- `vus` reste en mémoire pendant toute l'exécution (voir ci-dessus).
+- Les motifs de rejet sont en français et non codifiés ; un code d'erreur (ex. `DATE_INVALIDE`) faciliterait le traitement automatique.
