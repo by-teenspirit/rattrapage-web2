@@ -106,3 +106,42 @@ Protocole clavier conservé.
 - Le chevron du sélecteur de mois est décoratif
 - La police d'icônes pèse environ 4 Mo. Un sous-ensemble limité aux icônes utilisées serait plus léger.
 - Pas de tests automatisés sur ce module : vérification manuelle.
+
+## C1 — AWS
+
+Le détail est dans `c1-aws/DOSSIER.md`. 
+
+Résumé des choix :
+
+### Architecture retenue
+- API FastAPI en conteneur Docker sur une instance EC2 
+- front servi par S3 + CloudFront 
+- base RDS PostgreSQL en sous-réseau privé.
+
+**Alternative étudiée** : API sur Lambda + API Gateway. Écartée parce que :
+- charge faible et régulière, donc le principal avantage de Lambda (payer à l'appel) ne sert à rien
+- le projet utilise déjà Docker
+
+### Choix 
+- **20 req/s en pointe** : une seule instance t4g.small suffit, sans load balancer.
+- **RTO 4 h** : une restauration manuelle tient dans le délai demandé, donc pas de Multi-AZ (qui doublerait le coût de la base).
+- **RPO 24 h** : la sauvegarde automatique RDS avec restauration répond à l'objectif
+- **Logs 30 jours** : rétention CloudWatch réglée à 30 jours.
+
+### Sécurité
+- Base sans accès public ; seule l'API peut la joindre (Security Groups).
+- Mot de passe de la base dans Secrets Manager, lu par l'API via son rôle IAM.
+- Déploiement depuis GitHub Actions par OIDC, sans clé d'accès stockée.
+- Moindre privilège pour chaque rôle.
+
+### Coût
+40,59 USD/mois (487,08 USD/an), estimé avec AWS Pricing Calculator, région Paris, le 06/10/2026, hors offre gratuite.
+- La base et le serveur représentent 78 % du total.
+- Trois options RDS activées par défaut dans le calculateur (RDS Proxy, Database Insights, Extended Support) ont été désactivées car inutiles, elles faisaient passer RDS de 15,80 dollars à 66,17 dollars.
+- Piste d'économie : Savings Plan sur 1 an pour l'EC2.
+
+### Méthode d'estimation des volumes
+Trafic et logs calculés à partir d'une moyenne (≈ 2 req/s sur 10 h × 22 jours), pas de la pointe, avec une marge ×2. Les hypothèses (taille des réponses, des logs) sont à remplacer par des mesures réelles.
+
+### Limites
+Voir la section 8 du dossier : instance unique, base Single-AZ, pas de reprise inter-région, volumes estimés, prix datés, durée de restauration non testée, aucun déploiement réel.
